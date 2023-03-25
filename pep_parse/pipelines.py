@@ -1,7 +1,5 @@
 from datetime import datetime as dt
 
-from itemadapter import ItemAdapter
-
 from .constants import BASE_DIR, PEPS_COUNT
 
 
