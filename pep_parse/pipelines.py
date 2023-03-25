@@ -15,6 +15,7 @@ class PepParsePipeline:
         return item
 
     def close_spider(self, spider):
+        """При закрытии паука создает файл с общим кол-вом статусов"""
         total = sum(PEPS_COUNT.values())
         results_dir = BASE_DIR / 'results'
         file_name = f'status_summary_{dt.now():%Y-%m-%d_%H-%M-%S}.csv'
