@@ -1,6 +1,6 @@
 import scrapy
 
-from pep_parse.constants import PATERN
+from pep_parse.constants import ALLOWED_DOMAINS, PATERN, START_URLS
 from pep_parse.items import PepParseItem
 
 
@@ -13,18 +13,19 @@ class PepSpider(scrapy.Spider):
     """
 
     name = 'pep'
-    allowed_domains = ['peps.python.org']
-    start_urls = ['https://peps.python.org/']
+    allowed_domains = [ALLOWED_DOMAINS]
+    start_urls = [START_URLS]
 
     def parse(self, response):
         """Парсинг основного урл"""
 
         tab = response.css('table.pep-zero-table')
-        all_peps = tab.css('tbody a::attr(href)')
-        for pep_link in all_peps:
+        all_peps = tab.css('tbody tr')
+        for pep in all_peps:
+            pep_link = pep.css('a::attr(href)').extract_first()
             yield response.follow(pep_link, callback=self.parse_pep)
 
-    def parse_pep(self, response):
+    def parse_pep(self, response) -> object:
         """Парсинг каждого PEP"""
 
         title = response.css('h1.page-title::text').get()
